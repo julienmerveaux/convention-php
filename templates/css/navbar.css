@@ -1,0 +1,73 @@
+
+
+#navbar ul.menu-list a {
+    color: var(--dark-color);
+    font-weight: 500;
+    padding-left: 45px;
+}
+.main-menu .hamburger {
+    display: none;
+}
+.main-menu.stellarnav>ul>li>a {
+    padding: 10px 30px;
+    font-weight: 500;
+    font-size: 17px;
+    color: #191919;
+}
+.stellarnav li a{
+    color: var(--dark-color);
+    font-weight: 500;
+}
+.stellarnav li.has-sub>a:after {
+    content: none;
+}
+.stellarnav .menu-toggle,
+.stellarnav.mobile.right .close-menu{
+    font-size: 0;
+}
+.stellarnav .icon-close {
+    width: 30px;
+    height: 30px;
+}
+.stellarnav .menu-toggle span.bars span {
+    width: 30px;
+    height: 3px;
+    background: var(--dark-color);
+    margin: 0 0 5px;
+    transition: 0.3s ease-in;
+}
+.stellarnav .menu-toggle:hover span.bars span {
+    background: var(--primary-color);
+}
+.stellarnav.mobile.right>ul {
+    z-index: 222;
+    background-color: var(--dark-color);
+}
+.stellarnav.mobile i {
+    display: none;
+}
+.stellarnav.mobile ul{
+    color: white;
+}
+.stellarnav.mobile li a{
+    color: var(--light-color);
+    border-bottom: 1px solid var(--accent-color);
+}
+.stellarnav.mobile .submenu li a{
+    border-bottom: 1px solid #5e5e5e;
+}
+.stellarnav.mobile .menu-item.has-sub .submenu{
+    background-color: var(--light-color);
+}
+.stellarnav.mobile .submenu a{
+    background-color: #343434;
+}
+.stellarnav.mobile .submenu a.active{
+    color: var(--primary-color);
+}
+.stellarnav .icon-close:after, .stellarnav .icon-close:before{
+    width: 30px;
+}
+.stellarnav a.dd-toggle .icon-plus:after, .stellarnav a.dd-toggle .icon-plus:before {
+    border-bottom: solid 3px var(--light-color);
+}

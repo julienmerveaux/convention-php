@@ -9,18 +9,20 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class EventController extends AbstractController
 {
 
-    #[Route('/events', name: 'event_list')]
-    public function index(EventRepository $repository): \Symfony\Component\HttpFoundation\Response
+
+    #[Route('/Accueil', name: 'accueil')]
+    public function index(EventRepository $repository): Response
     {
         $Event = $repository->findAll();
 
-        return $this->render('Acceuil.html.twig', [
-            'event' => $Event,
+        return $this->render('Accueil.html.twig', [
+            'events' => $Event,
         ]);
     }
 
@@ -43,7 +45,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/createEvent', name: 'event_new')]
-    public function new(Request $request, ManagerRegistry $managerRegistry): \Symfony\Component\HttpFoundation\Response
+    public function new(Request $request, ManagerRegistry $managerRegistry): Response
     {
         $event = new Event();
         $form = $this->createForm(EventFormType::class, $event);
@@ -60,5 +62,17 @@ class EventController extends AbstractController
         return $this->render('new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/event/{id}/inscription", name="inscription_event")
+     */
+    public function inscription(int $id): Response
+    {
+        // Logique pour gérer l'inscription à l'événement avec l'ID $id
+        // Par exemple, ajouter l'utilisateur actuel à la liste des participants de l'événement
+
+        // Redirection vers une autre page après l'inscription
+        return $this->redirectToRoute('event_details', ['id' => $id]);
     }
 }

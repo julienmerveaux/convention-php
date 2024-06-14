@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
+{{ include('components/navbar.html.twig') }}
 <div class="container">
     <h1 class="my-4">Liste des événements</h1>
     <table class="table table-striped">
@@ -19,17 +20,21 @@
         </tr>
         </thead>
         <tbody>
-        {% for event in event %}
+        {% for event in events %}
             <tr>
                 <td>{{ event.id }}</td>
                 <td>{{ event.description }}</td>
-                <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td> <!-- Conversion de DateTime en chaîne -->
+                <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
                 <td>{{ event.capacity }}</td>
-                <td>{{ event.isPublic    ? 'Oui' : 'Non' }}</td> <!-- Conversion de booléen en chaîne -->
+                <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
