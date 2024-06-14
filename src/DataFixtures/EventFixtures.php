@@ -14,7 +14,7 @@ class EventFixtures extends Fixture
             $event = new Event();
             $event->setTitle('title' . $i);
             $event->setDescription('description' . $i);
-            $event->setDatetime(\DateTimeImmutable::createFromMutable());
+            $event->setDatetime(new \DateTime());
             $event->setCapacity($i);
             $event->setPublic($i%2 == 0);
             $manager->persist($event);
