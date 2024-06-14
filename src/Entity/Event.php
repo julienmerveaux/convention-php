@@ -34,8 +34,8 @@ class Event
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'list_events')]
-    private Collection $list_users;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'User')]
+    private Collection $users;
 
     public function __construct()
     {
