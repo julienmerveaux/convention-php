@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des événements</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Liste des événements</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Date et Heure</th>
+            <th>Capacité</th>
+            <th>Public</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in event %}
+            <tr>
+                <td>{{ event.id }}</td>
+                <td>{{ event.description }}</td>
+                <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td> <!-- Conversion de DateTime en chaîne -->
+                <td>{{ event.capacity }}</td>
+                <td>{{ event.isPublic    ? 'Oui' : 'Non' }}</td> <!-- Conversion de booléen en chaîne -->
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

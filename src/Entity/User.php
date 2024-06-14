@@ -31,12 +31,12 @@ class User implements UserInterface
     /**
      * @var Collection<int, Event>
      */
-    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'Event')]
-    private Collection $events_user;
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'list_users')]
+    private Collection $events;
 
     public function __construct()
     {
-        $this->list_events = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,25 +95,25 @@ class User implements UserInterface
     /**
      * @return Collection<int, Event>
      */
-    public function getListEvents(): Collection
+    public function getEvents(): Collection
     {
-        return $this->list_events;
+        return $this->events;
     }
 
-    public function addListEvent(Event $listEvent): static
+    public function addListEvent(Event $event): static
     {
-        if (!$this->list_events->contains($listEvent)) {
-            $this->list_events->add($listEvent);
-            $listEvent->addListUser($this);
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->addListUser($this);
         }
 
         return $this;
     }
 
-    public function removeListEvent(Event $listEvent): static
+    public function removeListEvent(Event $event): static
     {
-        if ($this->list_events->removeElement($listEvent)) {
-            $listEvent->removeListUser($this);
+        if ($this->events->removeElement($event)) {
+            $event->removeListUser($this);
         }
 
         return $this;
@@ -121,16 +121,16 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        // TODO: Implement getRoles() method.
+        return ['ROLE_USER']; // Vous pouvez ajuster selon vos besoins
     }
 
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
+        // Si vous avez des données sensibles temporaires, nettoyez-les ici
     }
 
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
+        return $this->email; // Utilisez l'email comme identifiant unique de l'utilisateur
     }
 }
