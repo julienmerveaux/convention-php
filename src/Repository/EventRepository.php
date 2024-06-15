@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,18 +17,29 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-    public function findByTitleLike(bool $is_connected, string $title)
+    public function findByTitleLike(bool $is_connected, int $page, int $limit, string $title)
     {
         $qb = $this->createQueryBuilder('e');
         $qb->where($qb->expr()->like('LOWER(e.title)', ':title'))
             ->setParameter('title', '%' . strtolower($title) . '%');
+
         if (!$is_connected) {
             $qb->andWhere($qb->expr()->eq('e.is_public', 1));
         }
 
-        return $qb->getQuery()->getResult();
-    }
+        // Pagination
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
 
+        $query = $qb->getQuery();
+
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return [
+            'data' => $paginator,
+            'total' => $paginator->count(),
+        ];
+    }
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

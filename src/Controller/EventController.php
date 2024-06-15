@@ -19,16 +19,18 @@ class EventController extends AbstractController
     #[Route('/Accueil', name: 'accueil')]
     public function index(Request $request, EventRepository $repository): Response
     {
-        $is_connected = false;
-        $user = $this->getUser();
-        if ($user instanceof UserInterface) {
-            $is_connected = true;
-        }
         $title = $request->query->get('title', '');
-        $Event = $repository->findByTitleLike($is_connected, $title);
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 5);
+        $is_connected = $this->getUser() !== null;
+
+        $result = $repository->findByTitleLike($is_connected, $page, $limit, $title);
 
         return $this->render('Accueil.html.twig', [
-            'events' => $Event,
+            'events' => $result['data'],
+            'total' => $result['total'],
+            'page' => $page,
+            'limit' => $limit,
         ]);
     }
 

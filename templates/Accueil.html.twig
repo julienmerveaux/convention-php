@@ -37,6 +37,16 @@
                 {% endfor %}
                 </tbody>
             </table>
+            <nav aria-label="Pagination" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% set total_pages = (total / limit)|round(0, 'ceil') %}
+                    {% for i in 1..total_pages %}
+                        <li class="page-item {% if i == page %}active{% endif %}">
+                            <a class="page-link" href="{{ path('accueil', {'title': app.request.get('title'), 'page': i, 'limit': limit}) }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
         {% else %}
             <div class="alert alert-danger" role="alert">
                 Pas d'événement trouvé. <a href="/Accueil" class="alert-link">Voir tous les événements.</a>
