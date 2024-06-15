@@ -6,11 +6,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 {% endblock %}
 
 {% block body %}
-    {{ include('components/navbar.html.twig') }}
+    {{ parent() }}
     <div class="container mt-5">
         <div class="card shadow-sm">
             <div class="card-body">
@@ -53,5 +52,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}
