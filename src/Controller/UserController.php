@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,12 +18,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserController extends AbstractController
 {
     #[Route('/profil_user', name: 'profil_user')]
-    public function index(): \Symfony\Component\HttpFoundation\Response
+    public function index(EventRepository $eventRepository): \Symfony\Component\HttpFoundation\Response
     {
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
-
-        // Vérifier que l'utilisateur est bien connecté
+        $events = $user->getEvents();
         if (!$user instanceof UserInterface) {
             return $this->redirectToRoute('login');
         }
@@ -30,6 +30,7 @@ class UserController extends AbstractController
         // Rendre le template avec les informations de l'utilisateur
         return $this->render('profil/profil.html.twig', [
             'user' => $user,
+            'events' => $events,
         ]);
     }
 

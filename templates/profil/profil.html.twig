@@ -6,18 +6,68 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <style>
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .profile-menu {
+            min-width: 250px;
+            padding: 20px;
+            border-right: 1px solid #dee2e6; /* Séparateur vertical */
+        }
+
+        .profile-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .profile-card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px; /* Ajout de marges pour l'espacement entre les cartes */
+        }
+
+        .profile-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .profile-list li {
+            background: #f8f9fa;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
     {{ parent() }}
-    <div class="container mt-5">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h1 class="card-title">User Profile</h1>
-                <hr>
+    <div class="profile-container">
+        <div class="profile-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#personal-info">Personal Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#events">Évènements crées</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#registered-events">Évènements inscrits</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="profile-content">
+            <div id="personal-info" class="profile-card mb-4">
+                <h1 class="mb-4">User Profile</h1>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="card-subtitle mb-3 text-muted">Personal Information</h5>
+                        <h5 class="text-muted mb-3">Personal Information</h5>
                         <dl class="row">
                             <dt class="col-sm-4">ID</dt>
                             <dd class="col-sm-8">{{ user.id }}</dd>
@@ -33,24 +83,63 @@
                         </dl>
                     </div>
                     <div class="col-md-6">
-                        <h5 class="card-subtitle mb-3 text-muted">Roles</h5>
-                        <ul class="list-group">
+                        <h5 class="text-muted mb-3">Roles</h5>
+                        <ul class="profile-list">
                             {% for role in user.roles %}
-                                <li class="list-group-item">{{ role }}</li>
+                                <li>{{ role }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
-                <hr>
                 <div class="text-center mt-4">
                     <a href="{{ path('edit_profil') }}" class="btn btn-primary btn-lg">Edit Profile</a>
                     <a href="{{ path('update_password') }}" class="btn btn-primary btn-lg">Change password</a>
                 </div>
             </div>
+
+            <div id="events" class="profile-card" style="display: none;">
+                <h5 class="text-muted mb-3">Events Created</h5>
+                <ul class="profile-list">
+                    {% for event in events %}
+                        <li>{{ event.title }}</li> {# Assurez-vous que 'title' correspond à la propriété de votre entité Event #}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Section Événements inscrits -->
+            <div id="registered-events" class="profile-card" style="display: none;">
+                <h5 class="text-muted mb-3">Événements inscrits</h5>
+{#                <ul class="profile-list">#}
+{#                    {% for event in getAllMyEvent %}#}
+{#                        <li>{{ event.title }}</li> #}{# Assurez-vous que 'title' correspond à la propriété de votre entité Event #}
+{#                    {% endfor %}#}
+{#                </ul>#}
+            </div>
         </div>
     </div>
-{% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    const targetId = link.getAttribute('href').substr(1);
+                    const targetDiv = document.getElementById(targetId);
+
+                    if (targetDiv) {
+                        // Masquer tous les autres divs de contenu
+                        document.querySelectorAll('.profile-content > .profile-card').forEach(function(div) {
+                            div.style.display = 'none';
+                        });
+
+                        // Afficher le div cible
+                        targetDiv.style.display = 'block';
+                    }
+                });
+            });
+        });
+;
+;
+;
+    </script>
 {% endblock %}

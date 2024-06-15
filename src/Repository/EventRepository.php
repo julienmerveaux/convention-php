@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,6 +46,8 @@ class EventRepository extends ServiceEntityRepository
             'limit' => $limit
         ];
     }
+
+//
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

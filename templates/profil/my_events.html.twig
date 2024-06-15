@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes événements{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-4">Mes événements</h1>
+        {% if events|length %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Date et Heure</th>
+                    <th>Capacité</th>
+                    <th>Public</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.description }}</td>
+                        <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
+                        <td>{{ event.capacity }}</td>
+                        <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                Vous n'êtes inscrit à aucun événement.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
