@@ -37,6 +37,10 @@ class Event
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'events')]
     private Collection $participant;
 
+    #[ORM\ManyToOne(inversedBy: 'listEventCreated')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $creator = null;
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -128,6 +132,18 @@ class Event
     public function removeListUser(User $listUser): static
     {
         $this->participant->removeElement($listUser);
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): static
+    {
+        $this->creator = $creator;
 
         return $this;
     }

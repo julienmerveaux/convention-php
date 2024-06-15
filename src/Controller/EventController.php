@@ -35,29 +35,6 @@ class EventController extends AbstractController
             'limit' => $result['limit'],
         ]);
     }
-//    #[Route('/addUser/{eventId}', name: 'addUser')]
-//    #[IsGranted('ROLE_USER')]
-//    public function addUser($eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response    {
-//        // Récupérer l'événement par son ID
-//        $event = $eventRepository->find($eventId);
-//
-//        if (!$event) {
-//            throw $this->createNotFoundException('L\'événement avec l\'ID '.$eventId.' n\'existe pas.');
-//        }
-//
-//        // Récupérer l'utilisateur connecté
-//        $user = $this->getUser();
-//
-//        // Ajouter l'utilisateur à l'événement
-//        $event->addParticipant($user);
-//
-//        // Sauvegarder les changements dans la base de données
-//        $entityManager->flush();
-//
-//        // Retourner une réponse JSON pour indiquer le succès de l'inscription
-//        return $this->json(['success' => true]);
-//    }
-//
 
     #[Route('/createEvent', name: 'createEvent')]
     #[IsGranted('ROLE_USER')]
@@ -72,12 +49,15 @@ class EventController extends AbstractController
             $user = $this->getUser();
 
             if ($user) {
-                // Persist the event first to get its ID
-                $entityManager->persist($event);
-                $entityManager->flush();  // Now the event ID is generated
+                // Associer l'événement à l'utilisateur
+                $event->setCreator($user);
 
-                // Add the event to the user's events
-                $user->addParticpantInEvent($event);
+                // Persist l'événement
+                $entityManager->persist($event);
+                $entityManager->flush();  // Maintenant l'ID de l'événement est généré
+
+                // Ajouter l'événement à la liste des événements créés par l'utilisateur
+                $user->addListEventCreated($event);
                 $entityManager->persist($user);
                 $entityManager->flush();
             }
@@ -89,4 +69,5 @@ class EventController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }

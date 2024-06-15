@@ -100,7 +100,7 @@
             <div id="events" class="profile-card" style="display: none;">
                 <h5 class="text-muted mb-3">Events Created</h5>
                 <ul class="profile-list">
-                    {% for event in events %}
+                    {% for event in ListEventCreated %}
                         <li>{{ event.title }}</li> {# Assurez-vous que 'title' correspond à la propriété de votre entité Event #}
                     {% endfor %}
                 </ul>
@@ -109,11 +109,11 @@
             <!-- Section Événements inscrits -->
             <div id="registered-events" class="profile-card" style="display: none;">
                 <h5 class="text-muted mb-3">Événements inscrits</h5>
-{#                <ul class="profile-list">#}
-{#                    {% for event in getAllMyEvent %}#}
-{#                        <li>{{ event.title }}</li> #}{# Assurez-vous que 'title' correspond à la propriété de votre entité Event #}
-{#                    {% endfor %}#}
-{#                </ul>#}
+                <ul class="profile-list">
+                    {% for event in ListEventsInscribed %}
+                        <li>{{ event.title }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
