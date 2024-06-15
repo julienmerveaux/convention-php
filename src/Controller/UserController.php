@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -63,4 +64,38 @@ class UserController extends AbstractController
         return $this->render('profil/edit_profil.html.twig', [
             'form' => $form->createView(),
         ]);
-    }}
+    }
+
+    #[Route('/update_password', name: 'update_password')]
+    public function updatePassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Création du formulaire
+        $form = $this->createForm(UpdatePasswordFormType::class, $user);
+
+        // Gestion de la soumission du formulaire
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hasher le nouveau mot de passe si fourni
+            $newPassword = $form->get('password')->getData();
+            if ($newPassword) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+            }
+
+            // Enregistrer les modifications de l'utilisateur
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Rediriger vers la page de profil après modification
+            return $this->redirectToRoute('profil_user');
+        }
+
+        // Rendre le template avec le formulaire
+        return $this->render('profil/update_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+}

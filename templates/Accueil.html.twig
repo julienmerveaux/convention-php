@@ -10,7 +10,7 @@
     {{ parent() }}
     <div class="container">
         <h1 class="my-4">Liste des événements</h1>
-        <form action="{{ path('accueil') }}" method="get" class="input-group mb-3">
+        <form action="{{ path('accueil') }}" method="get" class="input-group mb-3 gap-5">
             <input type="text" name="title" class="form-control" placeholder="Rechercher un événement" aria-label="Rechercher un événement" aria-describedby="button-addon2">
             <button class="btn btn-outline-primary" type="submit" id="button-addon2">Rechercher</button>
         </form>
