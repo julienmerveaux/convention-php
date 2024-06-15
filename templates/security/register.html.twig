@@ -1,8 +1,6 @@
 {# templates/registration/register.html.twig #}
 {% extends 'base.html.twig' %}
 
-
-   {{ include('components/navbar.html.twig') }}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -28,6 +26,8 @@
 {% endblock %}
 
 {% block body %}
+    {{ parent() }}
+
     <div class="container">
         <form method="post" class="form-register">
             {{ form_start(registrationForm) }}
@@ -42,7 +42,7 @@
             {{ form_end(registrationForm) }}
 
             <p class="text-center">
-                Already have an account? <a href="/login">Login!</a>
+                Already have an account? <a href="{{ path('login') }}">Login!</a>
             </p>
         </form>
     </div>
