@@ -33,11 +33,6 @@ class EventFormType extends AbstractType
             ->add('is_public', CheckboxType::class, [
                 'label' => 'Événement public',
                 'required' => false])
-            ->add('list_users', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Créer',
                 'attr' => ['class' => 'btn btn-primary mt-3']

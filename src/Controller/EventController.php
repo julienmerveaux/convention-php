@@ -16,7 +16,7 @@ class EventController extends AbstractController
 {
 
 
-    #[Route('/Accueil', name: 'accueil')]
+    #[Route('/', name: 'accueil')]
     public function index(EventRepository $repository): Response
     {
         $Event = $repository->findAll();
@@ -44,7 +44,7 @@ class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/createEvent', name: 'event_new')]
+    #[Route('/createEvent', name: 'createEvent')]
     public function new(Request $request, ManagerRegistry $managerRegistry): Response
     {
         $event = new Event();
@@ -56,7 +56,7 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('events');
+            return $this->redirectToRoute('accueil');
         }
 
         return $this->render('new.html.twig', [

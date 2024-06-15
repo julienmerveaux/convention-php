@@ -7,6 +7,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ path('createEvent') }}">Créer un évènement</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
                     <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
                 </li>
                 {% if app.user %}

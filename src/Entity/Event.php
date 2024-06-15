@@ -95,12 +95,12 @@ class Event
         return $this;
     }
 
-    public function isPublic(): ?bool
+    public function getIsPublic(): ?bool
     {
         return $this->is_public;
     }
 
-    public function setPublic(bool $is_public): static
+    public function setIsPublic(bool $is_public): static
     {
         $this->is_public = $is_public;
 
