@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class EventController extends AbstractController
 {
@@ -18,8 +19,13 @@ class EventController extends AbstractController
     #[Route('/Accueil', name: 'accueil')]
     public function index(Request $request, EventRepository $repository): Response
     {
+        $is_connected = false;
+        $user = $this->getUser();
+        if ($user instanceof UserInterface) {
+            $is_connected = true;
+        }
         $title = $request->query->get('title', '');
-        $Event = $repository->findByTitleLike($title);
+        $Event = $repository->findByTitleLike($is_connected, $title);
 
         return $this->render('Accueil.html.twig', [
             'events' => $Event,
