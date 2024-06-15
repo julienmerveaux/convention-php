@@ -129,9 +129,10 @@ class Event
         return $this;
     }
 
-    public function removeListUser(User $listUser): static
+    public function removeParticipant(User $participant): static
     {
-        $this->participant->removeElement($listUser);
+        $this->participant->removeElement($participant);
+        $participant->removeEvent($this);
 
         return $this;
     }

@@ -119,10 +119,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeListEvent(Event $event): static
+    public function removeEvent(Event $event): static
     {
         if ($this->events->removeElement($event)) {
-            $event->removeListUser($this);
+            $event->removeParticipant($this);
         }
 
         return $this;
@@ -169,7 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeListEventCreated(Event $listEventCreated): static
+    public function removeEventCreated(Event $listEventCreated): static
     {
         if ($this->listEventCreated->removeElement($listEventCreated)) {
             // set the owning side to null (unless already changed)
