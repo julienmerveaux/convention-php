@@ -1,0 +1,54 @@
+{# templates/registration/register.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+   {{ include('components/navbar.html.twig') }}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-register {
+            max-width: 400px;
+            width: 100%;
+            padding: 15px;
+            margin: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <form method="post" class="form-register">
+            {{ form_start(registrationForm) }}
+            <h1 class="h3 mb-3 font-weight-normal text-center">Please Register</h1>
+            {{ form_row(registrationForm.firstname, {'attr': {'class': 'form-control mb-3', 'placeholder': 'First Name'}}) }}
+            {{ form_row(registrationForm.lastname, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Last Name'}}) }}
+            {{ form_row(registrationForm.email, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Email address'}}) }}
+            {{ form_row(registrationForm.password, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Password'}}) }}
+
+            <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Register</button>
+
+            {{ form_end(registrationForm) }}
+
+            <p class="text-center">
+                Already have an account? <a href="/login">Login!</a>
+            </p>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

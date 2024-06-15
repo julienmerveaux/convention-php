@@ -35,7 +35,7 @@ class EventController extends AbstractController
 //        ]);
 //    }
 
-    #[Route('/getEventWithFilter', name: 'app_event')]
+    #[Route('/getEventWithFilter', name: 'event')]
     public function getEventWithFilter(): JsonResponse
     {
         return $this->json([

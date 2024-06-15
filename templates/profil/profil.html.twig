@@ -1,0 +1,57 @@
+{# templates/profil/profil.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block body %}
+    {{ include('components/navbar.html.twig') }}
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title">User Profile</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="card-subtitle mb-3 text-muted">Personal Information</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">ID</dt>
+                            <dd class="col-sm-8">{{ user.id }}</dd>
+
+                            <dt class="col-sm-4">First Name</dt>
+                            <dd class="col-sm-8">{{ user.firstname }}</dd>
+
+                            <dt class="col-sm-4">Last Name</dt>
+                            <dd class="col-sm-8">{{ user.lastname }}</dd>
+
+                            <dt class="col-sm-4">Email</dt>
+                            <dd class="col-sm-8">{{ user.email }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="card-subtitle mb-3 text-muted">Roles</h5>
+                        <ul class="list-group">
+                            {% for role in user.roles %}
+                                <li class="list-group-item">{{ role }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center mt-4">
+                    <a href="{{ path('edit_profil') }}" class="btn btn-primary btn-lg">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

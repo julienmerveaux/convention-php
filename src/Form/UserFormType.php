@@ -20,7 +20,6 @@ class UserFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
             ->add('firstname')
             ->add('lastname')
             ->add('email', EmailType::class, [
@@ -53,13 +52,7 @@ class UserFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-            ->add('list_events', EntityType::class, [
-                'class' => Event::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
