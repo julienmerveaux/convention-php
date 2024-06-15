@@ -34,12 +34,12 @@ class Event
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'event-user')]
-    private Collection $list_users;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'events')]
+    private Collection $participant;
 
     public function __construct()
     {
-        $this->list_users = new ArrayCollection();
+        $this->participant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,15 +110,16 @@ class Event
     /**
      * @return Collection<int, User>
      */
-    public function getListUsers(): Collection
+    public function getParticipant(): Collection
     {
-        return $this->list_users;
+        return $this->participant;
     }
 
     public function addListUser(User $listUser): static
     {
-        if (!$this->list_users->contains($listUser)) {
-            $this->list_users->add($listUser);
+        if (!$this->participant->contains($listUser)) {
+            $this->participant->add($listUser);
+            $listUser->addParticpantInEvent($this);
         }
 
         return $this;
@@ -126,7 +127,7 @@ class Event
 
     public function removeListUser(User $listUser): static
     {
-        $this->list_users->removeElement($listUser);
+        $this->participant->removeElement($listUser);
 
         return $this;
     }

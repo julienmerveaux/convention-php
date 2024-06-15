@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Event>
      */
-    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'list_users')]
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'participant')]
     private Collection $events;
 
     public function __construct()
@@ -104,13 +104,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->events;
     }
 
-    public function addListEvent(Event $event): static
+    public function addParticpantInEvent(Event $event): static
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->addListUser($this);
         }
-
         return $this;
     }
 
