@@ -23,6 +23,7 @@
                     <th>Date et Heure</th>
                     <th>Capacité</th>
                     <th>Public</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,9 @@
                         <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
                         <td>{{ event.capacity }}</td>
                         <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            {#                        <a href="{{ path('addUserInEventByID') }}" class="btn btn-sm btn-success">S'inscrire</a>#}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
