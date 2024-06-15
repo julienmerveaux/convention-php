@@ -7,7 +7,6 @@ use App\Form\EventFormType;
 use App\Repository\EventRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,9 +16,10 @@ class EventController extends AbstractController
 
 
     #[Route('/Accueil', name: 'accueil')]
-    public function index(EventRepository $repository): Response
+    public function index(Request $request, EventRepository $repository): Response
     {
-        $Event = $repository->findAll();
+        $title = $request->query->get('title', '');
+        $Event = $repository->findByTitleLike($title);
 
         return $this->render('Accueil.html.twig', [
             'events' => $Event,
@@ -35,14 +35,6 @@ class EventController extends AbstractController
 //        ]);
 //    }
 
-    #[Route('/getEventWithFilter', name: 'event')]
-    public function getEventWithFilter(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/EventController.php',
-        ]);
-    }
 
     #[Route('/createEvent', name: 'event_new')]
     public function new(Request $request, ManagerRegistry $managerRegistry): Response
