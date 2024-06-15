@@ -19,6 +19,9 @@ class EventRepository extends ServiceEntityRepository
 
     public function findByTitleLike(bool $is_connected, int $page, int $limit, string $title)
     {
+        $page = max(1, $page);
+        $limit = max(1, $limit);
+        $limit = min(10, $limit);
         $qb = $this->createQueryBuilder('e');
         $qb->where($qb->expr()->like('LOWER(e.title)', ':title'))
             ->setParameter('title', '%' . strtolower($title) . '%');
@@ -38,6 +41,8 @@ class EventRepository extends ServiceEntityRepository
         return [
             'data' => $paginator,
             'total' => $paginator->count(),
+            'page' => $page,
+            'limit' => $limit
         ];
     }
     //    /**

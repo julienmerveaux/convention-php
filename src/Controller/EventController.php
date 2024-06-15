@@ -29,8 +29,8 @@ class EventController extends AbstractController
         return $this->render('Accueil.html.twig', [
             'events' => $result['data'],
             'total' => $result['total'],
-            'page' => $page,
-            'limit' => $limit,
+            'page' => $result['page'],
+            'limit' => $result['limit'],
         ]);
     }
 
