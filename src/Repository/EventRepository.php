@@ -16,6 +16,18 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
+    public function findByTitleLike(bool $is_connected, string $title)
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb->where($qb->expr()->like('LOWER(e.title)', ':title'))
+            ->setParameter('title', '%' . strtolower($title) . '%');
+        if (!$is_connected) {
+            $qb->andWhere($qb->expr()->eq('e.is_public', 1));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

@@ -7,19 +7,25 @@ use App\Form\EventFormType;
 use App\Repository\EventRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class EventController extends AbstractController
 {
 
 
     #[Route('/', name: 'accueil')]
-    public function index(EventRepository $repository): Response
+    public function index(Request $request, EventRepository $repository): Response
     {
-        $Event = $repository->findAll();
+        $is_connected = false;
+        $user = $this->getUser();
+        if ($user instanceof UserInterface) {
+            $is_connected = true;
+        }
+        $title = $request->query->get('title', '');
+        $Event = $repository->findByTitleLike($is_connected, $title);
 
         return $this->render('Accueil.html.twig', [
             'events' => $Event,
@@ -35,14 +41,6 @@ class EventController extends AbstractController
 //        ]);
 //    }
 
-    #[Route('/getEventWithFilter', name: 'event')]
-    public function getEventWithFilter(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/EventController.php',
-        ]);
-    }
 
     #[Route('/createEvent', name: 'createEvent')]
     public function new(Request $request, ManagerRegistry $managerRegistry): Response

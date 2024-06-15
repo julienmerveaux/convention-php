@@ -10,32 +10,42 @@
     {{ parent() }}
     <div class="container">
         <h1 class="my-4">Liste des événements</h1>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Description</th>
-                <th>Date et Heure</th>
-                <th>Capacité</th>
-                <th>Public</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for event in events %}
+        <form action="{{ path('accueil') }}" method="get" class="input-group mb-3">
+            <input type="text" name="title" class="form-control" placeholder="Rechercher un événement" aria-label="Rechercher un événement" aria-describedby="button-addon2">
+            <button class="btn btn-outline-primary" type="submit" id="button-addon2">Rechercher</button>
+        </form>
+        {% if events|length %}
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td>{{ event.id }}</td>
-                    <td>{{ event.description }}</td>
-                    <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
-                    <td>{{ event.capacity }}</td>
-                    <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
-                    <td>
-                        {#                        <a href="{{ path('addUserInEventByID') }}" class="btn btn-sm btn-success">S'inscrire</a>#}
-                    </td>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Date et Heure</th>
+                    <th>Capacité</th>
+                    <th>Public</th>
+                    <th>Action</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>{{ event.description }}</td>
+                        <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
+                        <td>{{ event.capacity }}</td>
+                        <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            {#                        <a href="{{ path('addUserInEventByID') }}" class="btn btn-sm btn-success">S'inscrire</a>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                Pas d'événement trouvé. <a href="/Accueil" class="alert-link">Voir tous les événements.</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
