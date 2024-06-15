@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
 use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
 use App\Repository\EventRepository;
@@ -133,6 +134,36 @@ class UserController extends AbstractController
         }
 
         // Rediriger vers la vue d'accueil
+        return $this->redirectToRoute('accueil');
+    }
+    #[Route('/removeEventCreated/{eventId}', name: 'removeEventCreated')]
+    #[IsGranted('ROLE_USER')]
+    public function removeEventCreated($eventId, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'utilisateur actuel
+        $currentUser = $this->getUser();
+
+        // Récupérer l'événement à supprimer
+        $event = $entityManager->getRepository(Event::class)->find($eventId);
+
+        // Vérifier si l'événement existe
+        if (!$event) {
+            throw $this->createNotFoundException('Event not found');
+        }
+
+        // Vérifier si l'utilisateur actuel est le créateur de l'événement
+        if ($event->getCreator() !== $currentUser) {
+            throw $this->createAccessDeniedException('You are not allowed to delete this event');
+        }
+
+        // Supprimer l'événement de la liste des événements créés par l'utilisateur
+        $currentUser->removeEventCreated($event);
+
+        // Supprimer l'événement de la base de données
+        $entityManager->remove($event);
+        $entityManager->flush();
+
+        // Redirection vers une autre page après la suppression, par exemple le profil de l'utilisateur
         return $this->redirectToRoute('accueil');
     }
 
