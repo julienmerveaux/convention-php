@@ -35,7 +35,8 @@
             {{ form_row(registrationForm.firstname, {'attr': {'class': 'form-control mb-3', 'placeholder': 'First Name'}}) }}
             {{ form_row(registrationForm.lastname, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Last Name'}}) }}
             {{ form_row(registrationForm.email, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Email address'}}) }}
-            {{ form_row(registrationForm.password, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Password'}}) }}
+            {{ form_row(registrationForm.password.first, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Password'}}) }}
+            {{ form_row(registrationForm.password.second, {'attr': {'class': 'form-control mb-3', 'placeholder': 'Repeat New Password'}}) }}
 
             <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Register</button>
 

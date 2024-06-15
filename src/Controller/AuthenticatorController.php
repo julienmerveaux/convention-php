@@ -49,6 +49,7 @@ class AuthenticatorController extends AbstractController
                 $form->get('password')->getData()
             );
             $user->setPassword($hashedPassword);
+            $user->setRoles(["ROLE_USER"]);
 
             // Enregistrement de l'utilisateur
             $entityManager->persist($user);

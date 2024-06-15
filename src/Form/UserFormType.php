@@ -27,20 +27,28 @@ class UserFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Please enter an email address']),
                     new Email(['message' => 'Please enter a valid email address']),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'Please enter a valid email address in the format XXXX@XXX.fr',
+                    ]),
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
+            ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'mapped' => false,
-                'required' => false,
+                'required' => true,
                 'first_options' => ['label' => 'New Password'],
                 'second_options' => ['label' => 'Repeat New Password'],
                 'constraints' => [
                     new Length([
-                        'min' => 6,
+                        'min' => 8,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
                         'max' => 4096,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                        'message' => 'Votre mot de passe doit contenir au moins une lettre et un chiffre.',
                     ]),
                 ],
             ]);
