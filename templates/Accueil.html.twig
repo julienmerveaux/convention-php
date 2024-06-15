@@ -53,7 +53,7 @@
             </nav>
         {% else %}
             <div class="alert alert-danger" role="alert">
-                Pas d'événement trouvé. <a href="/Accueil" class="alert-link">Voir tous les événements.</a>
+                Pas d'événement trouvé. <a href="{{ path('accueil') }}" class="alert-link">Voir tous les événements.</a>
             </div>
         {% endif %}
     </div>
