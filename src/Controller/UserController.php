@@ -17,9 +17,16 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Service\EventCapacityCalculator;
 
 class UserController extends AbstractController
 {
+    private EventCapacityCalculator $eventCapacityCalculator;
+
+    public function __construct(EventCapacityCalculator $eventCapacityCalculator)
+    {
+        $this->eventCapacityCalculator = $eventCapacityCalculator;
+    }
     #[Route('/profil_user', name: 'profil_user')]
     public function index(EventRepository $eventRepository): \Symfony\Component\HttpFoundation\Response
     {
@@ -77,7 +84,7 @@ class UserController extends AbstractController
     }
     #[Route('/addUser/{eventId}', name: 'addUser')]
     #[IsGranted('ROLE_USER')]
-    public function addUser($eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
+    public function addUser(int $eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
     {
         // Récupérer l'événement par son ID
         $event = $eventRepository->find($eventId);
@@ -86,28 +93,36 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('L\'événement avec l\'ID ' . $eventId . ' n\'existe pas.');
         }
 
-        // Récupérer l'utilisateur connecté
-        $user = $this->getUser();
+        // Utiliser le service pour vérifier le nombre maximal de participants
+        $remainingPlaces = $this->eventCapacityCalculator->calculateRemainingPlaces($event);
 
-        // Vérifier si l'utilisateur est déjà dans la liste des participants
-        if (!$event->getParticipant()->contains($user)) {
-            // Ajouter l'utilisateur à l'événement
-            $event->addListUser($user);
-
-            // Persist l'événement
-            $entityManager->persist($event);
-            $entityManager->flush();
-
-            // Ajouter un message flash de succès
-            $this->addFlash('success', 'Vous êtes inscrit à l\'événement avec succès.');
+        if ($remainingPlaces <= 0) {
+            $this->addFlash('error', 'Le nombre maximal de participants est atteint pour cet événement.');
         } else {
-            // Ajouter un message flash d'erreur
-            $this->addFlash('error', 'Vous êtes déjà inscrit à cet événement.');
+            // Récupérer l'utilisateur connecté
+            $user = $this->getUser();
+
+            // Vérifier si l'utilisateur est déjà inscrit à l'événement
+            if (!$event->getParticipant()->contains($user)) {
+                // Ajouter l'utilisateur à l'événement
+                $event->addListUser($user);
+
+                // Persist l'événement
+                $entityManager->persist($event);
+                $entityManager->flush();
+
+                // Ajouter un message flash de succès
+                $this->addFlash('success', 'Vous êtes inscrit à l\'événement avec succès.');
+            } else {
+                // Ajouter un message flash d'erreur
+                $this->addFlash('error', 'Vous êtes déjà inscrit à cet événement.');
+            }
         }
 
         // Rediriger vers la vue d'accueil
         return $this->redirectToRoute('accueil');
     }
+
     #[Route('/removeEventCreated/{eventId}', name: 'removeEventCreated')]
     #[IsGranted('ROLE_USER')]
     public function removeEventCreated($eventId, EntityManagerInterface $entityManager): Response

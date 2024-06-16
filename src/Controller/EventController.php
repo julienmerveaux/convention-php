@@ -63,6 +63,32 @@ class EventController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/removeUser/{eventId}', name: 'removeUser')]
+    #[IsGranted('ROLE_USER')]
+    public function removeUser($eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
+    {
+        // Récupérer l'événement par son ID
+        $event = $eventRepository->find($eventId);
+
+        if (!$event) {
+            throw $this->createNotFoundException('L\'événement avec l\'ID ' . $eventId . ' n\'existe pas.');
+        }
+
+        $user = $this->getUser();
+
+        if ($event->getParticipant()->contains($user)) {
+            $event->removeParticipant($user);
+
+            $entityManager->persist($event);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Vous avez été désinscrit de l\'événement.');
+        } else {
+            $this->addFlash('error', 'Vous n\'étiez pas inscrit à cet événement.');
+        }
+
+        return $this->redirectToRoute('accueil'); // Assurez-vous d'adapter cette redirection à votre structure de routes
+    }
 
     #[Route('/event/edit/{eventId}', name: 'editEvent')]
     #[IsGranted('ROLE_USER')]
