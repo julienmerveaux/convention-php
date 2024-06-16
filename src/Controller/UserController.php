@@ -8,6 +8,7 @@ use App\Form\ConfirmPasswordType;
 use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
 use App\Repository\EventRepository;
+use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +40,7 @@ class UserController extends AbstractController
         if (!$user instanceof UserInterface) {
             return $this->redirectToRoute('login');
         }
-
+        $this->denyAccessUnlessGranted(UserVoter::VIEW, $user);
         // Rendre le template avec les informations de l'utilisateur
         return $this->render('profil/profil.html.twig', [
             'user' => $user,
@@ -144,6 +145,9 @@ class UserController extends AbstractController
         if ($event->getCreator() !== $currentUser) {
             throw $this->createAccessDeniedException('You are not allowed to delete this event');
         }
+
+        // Vérifier l'autorisation avec le Voter
+//        $this->denyAccessUnlessGranted(UserVoter::DELETE, $event);
 
         // Supprimer l'événement de la liste des événements créés par l'utilisateur
         $currentUser->removeEventCreated($event);

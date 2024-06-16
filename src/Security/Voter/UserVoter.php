@@ -10,12 +10,11 @@ class UserVoter extends Voter
 {
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
+    public const DELETE = 'POST_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -23,21 +22,31 @@ class UserVoter extends Voter
     {
         $user = $token->getUser();
 
-        // if the user is anonymous, do not grant access
+        // Si l'utilisateur est anonyme, refuser l'accès
         if (!$user instanceof UserInterface) {
             return false;
         }
 
-        // ... (check conditions and return true to grant permission) ...
+        // Vérifier si l'utilisateur a le rôle ROLE_USER
+        $hasUserRole = in_array('ROLE_USER', $user->getRoles());
+
         switch ($attribute) {
             case self::EDIT:
-                // logic to determine if the user can EDIT
-                // return true or false
+                // Autoriser l'édition si l'utilisateur a le rôle ROLE_USER ou édite son propre profil
+                return $hasUserRole || $user === $subject;
                 break;
 
             case self::VIEW:
-                // logic to determine if the user can VIEW
-                // return true or false
+                // Autoriser la visualisation si l'utilisateur a le rôle ROLE_USER, c'est son propre profil, ou il est admin
+                return $hasUserRole || $user === $subject;
+                break;
+
+            case self::DELETE:
+                // Autoriser la suppression si l'utilisateur a le rôle ROLE_USER et est le créateur de l'événement
+                if ($hasUserRole && $subject instanceof \App\Entity\Event) {
+                    return $subject->getCreator() === $user;
+                }
+                return false;
                 break;
         }
 
