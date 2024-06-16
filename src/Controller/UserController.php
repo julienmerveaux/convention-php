@@ -116,7 +116,7 @@ class UserController extends AbstractController
                 $entityManager->flush();
 
                 // Envoyer l'email de confirmation d'inscription
-                $mailJetService->sendCancellationConfirmation('jaimet@outlook.fr');
+                $mailJetService->sendRegistrationConfirmation($user->getEmail());
 
                 // Ajouter un message flash de succès
                 $this->addFlash('success', 'Vous êtes inscrit à l\'événement avec succès.');
