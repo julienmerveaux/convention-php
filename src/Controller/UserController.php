@@ -146,9 +146,7 @@ class UserController extends AbstractController
         }
 
         // Vérifier si l'utilisateur actuel est le créateur de l'événement
-        if ($event->getCreator() !== $currentUser) {
-            throw $this->createAccessDeniedException('You are not allowed to delete this event');
-        }
+        $this->denyAccessUnlessGranted('POST_DELETE', $event);
 
         // Vérifier l'autorisation avec le Voter
 //        $this->denyAccessUnlessGranted(UserVoter::DELETE, $event);
