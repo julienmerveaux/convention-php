@@ -6,18 +6,14 @@ use App\Entity\Event;
 use App\Form\EventFormType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EventController extends AbstractController
 {
-
-
     #[Route('/', name: 'accueil')]
     public function index(Request $request, EventRepository $repository): Response
     {
@@ -38,62 +34,58 @@ class EventController extends AbstractController
 
     #[Route('/createEvent', name: 'createEvent')]
     #[IsGranted('ROLE_USER')]
-    public function new(Request $request, ManagerRegistry $managerRegistry): Response
+    public function new(Request $request, EntityManagerInterface $manager): Response
     {
         $event = new Event();
-        $form = $this->createForm(EventFormType::class, $event);
+        $form = $this->createForm(EventFormType::class, $event, [
+            'submit_label' => 'Créer', // Utiliser 'Créer' comme label du bouton
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $managerRegistry->getManager();
             $user = $this->getUser();
-
             if ($user) {
-                // Associer l'événement à l'utilisateur
                 $event->setCreator($user);
-
-                // Persist l'événement
-                $entityManager->persist($event);
-                $entityManager->flush();  // Maintenant l'ID de l'événement est généré
+                $manager->persist($event);
+                $manager->flush();
 
                 // Ajouter l'événement à la liste des événements créés par l'utilisateur
                 $user->addListEventCreated($event);
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $manager->persist($user);
+                $manager->flush();
             }
 
             return $this->redirectToRoute('accueil');
         }
 
-        return $this->render('new.html.twig', [
+        return $this->render('form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-    #[Route('/removeUser/{eventId}', name: 'removeUser')]
+
+    #[Route('/event/edit/{eventId}', name: 'editEvent')]
     #[IsGranted('ROLE_USER')]
-    public function removeUser($eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
+    public function editEvent(int $eventId, Request $request, EntityManagerInterface $manager, EventRepository $repository): Response
     {
-        // Récupérer l'événement par son ID
-        $event = $eventRepository->find($eventId);
+        $event = $repository->find($eventId);
 
         if (!$event) {
-            throw $this->createNotFoundException('L\'événement avec l\'ID ' . $eventId . ' n\'existe pas.');
+            throw $this->createNotFoundException('No event found for id ' . $eventId);
         }
 
-        $user = $this->getUser();
+        $form = $this->createForm(EventFormType::class, $event, [
+            'submit_label' => 'Enregistrer', // Utiliser 'Enregistrer' comme label du bouton
+        ]);
+        $form->handleRequest($request);
 
-        if ($event->getParticipant()->contains($user)) {
-            $event->removeParticipant($user);
-
-            $entityManager->persist($event);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Vous avez été désinscrit de l\'événement.');
-        } else {
-            $this->addFlash('error', 'Vous n\'étiez pas inscrit à cet événement.');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+            return $this->redirectToRoute('profil_user');
         }
 
-        return $this->redirectToRoute('accueil'); // Assurez-vous d'adapter cette redirection à votre structure de routes
+        return $this->render('form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
-
 }

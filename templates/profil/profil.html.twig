@@ -119,6 +119,7 @@
                     {% for event in ListEventCreated %}
                         <li>
                             <span>{{ event.title }}</span>
+                            <a href="{{ path('editEvent', {'eventId': event.id}) }}" class="btn btn-success btn-sm">Editer l'événement</a>
                             <a href="{{ path('removeEventCreated', {'eventId': event.id}) }}" class="btn btn-danger btn-sm">Supprimer l'événement</a>
                         </li>
                     {% endfor %}
