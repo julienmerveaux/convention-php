@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Form\EventFormType;
 use App\Repository\EventRepository;
+use App\Service\MailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,7 @@ class EventController extends AbstractController
     }
     #[Route('/removeUser/{eventId}', name: 'removeUser')]
     #[IsGranted('ROLE_USER')]
-    public function removeUser($eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
+    public function removeUser(int $eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository, MailJetService $mailJetService): Response
     {
         // Récupérer l'événement par son ID
         $event = $eventRepository->find($eventId);
@@ -78,6 +79,7 @@ class EventController extends AbstractController
             throw $this->createNotFoundException('L\'événement avec l\'ID ' . $eventId . ' n\'existe pas.');
         }
 
+        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
         if ($event->getParticipant()->contains($user)) {
@@ -86,6 +88,9 @@ class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
+            // Envoyer un email de confirmation d'annulation
+            $mailJetService->sendCancellationConfirmation($user->getEmail());
+
             $this->addFlash('success', 'Vous avez été désinscrit de l\'événement.');
         } else {
             $this->addFlash('error', 'Vous n\'étiez pas inscrit à cet événement.');
@@ -93,7 +98,6 @@ class EventController extends AbstractController
 
         return $this->redirectToRoute('accueil'); // Assurez-vous d'adapter cette redirection à votre structure de routes
     }
-
     #[Route('/event/edit/{eventId}', name: 'editEvent')]
     #[IsGranted('ROLE_USER')]
     public function editEvent(int $eventId, Request $request, EntityManagerInterface $manager, EventRepository $repository): Response

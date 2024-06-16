@@ -9,6 +9,7 @@ use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
 use App\Repository\EventRepository;
 use App\Security\Voter\UserVoter;
+use App\Service\MailJetService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -87,7 +88,7 @@ class UserController extends AbstractController
     }
     #[Route('/addUser/{eventId}', name: 'addUser')]
     #[IsGranted('ROLE_USER')]
-    public function addUser(int $eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
+    public function addUser(int $eventId, EntityManagerInterface $entityManager, EventRepository $eventRepository, MailJetService $mailJetService): Response
     {
         // Récupérer l'événement par son ID
         $event = $eventRepository->find($eventId);
@@ -113,6 +114,9 @@ class UserController extends AbstractController
                 // Persist l'événement
                 $entityManager->persist($event);
                 $entityManager->flush();
+
+                // Envoyer l'email de confirmation d'inscription
+                $mailJetService->sendCancellationConfirmation('jaimet@outlook.fr');
 
                 // Ajouter un message flash de succès
                 $this->addFlash('success', 'Vous êtes inscrit à l\'événement avec succès.');
