@@ -17,14 +17,14 @@
             <button class="btn btn-outline-primary" type="submit" id="button-addon2">Rechercher</button>
         </form>
         {% if events|length %}
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-striped"><thead>
                 <tr>
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Date et Heure</th>
                     <th>Capacité</th>
                     <th>Public</th>
+                    <th>Participants</th> <!-- Nouvelle colonne -->
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -36,13 +36,13 @@
                         <td>{{ event.datetime|date("Y-m-d H:i:s") }}</td>
                         <td>{{ event.capacity }}</td>
                         <td>{{ event.isPublic ? 'Oui' : 'Non' }}</td>
+                        <td>{{ event.participantsCount }} / {{ event.capacity }}</td> <!-- Affichage du nombre de participants -->
                         <td>
                             <a href="{{ path('addUser', {'eventId': event.id}) }}" class="btn btn-sm btn-success">S'inscrire</a>
                         </td>
                     </tr>
                 {% endfor %}
-                </tbody>
-            </table>
+                </tbody></table>
             <nav aria-label="Pagination" class="d-flex justify-content-center">
                 <ul class="pagination">
                     {% set total_pages = (total / limit)|round(0, 'ceil') %}

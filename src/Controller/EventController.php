@@ -23,7 +23,11 @@ class EventController extends AbstractController
         $is_connected = $this->getUser() !== null;
 
         $result = $repository->findByTitleLike($is_connected, $page, $limit, $title);
-
+        foreach ($result['data'] as $event) {
+            $participantsCount = count($event->getParticipant());
+            $event->participantsCount = $participantsCount;
+            $event->setremainingPlaces = $event->getCapacity() - $participantsCount;
+        }
         return $this->render('Accueil.html.twig', [
             'events' => $result['data'],
             'total' => $result['total'],
@@ -78,7 +82,7 @@ class EventController extends AbstractController
 
         if ($event->getParticipant()->contains($user)) {
             $event->removeParticipant($user);
-
+            $event->setRemainingPlaces($event->getRemainingPlaces() + 1);
             $entityManager->persist($event);
             $entityManager->flush();
 

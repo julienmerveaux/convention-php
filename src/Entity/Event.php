@@ -40,7 +40,7 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'listEventCreated')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
-
+    private $remainingPlaces;
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -117,6 +117,17 @@ class Event
     public function getParticipant(): Collection
     {
         return $this->participant;
+    }
+    public function getRemainingPlaces(): ?int
+    {
+        return $this->remainingPlaces;
+    }
+
+    public function setRemainingPlaces(int $remainingPlaces): self
+    {
+        $this->remainingPlaces = $remainingPlaces;
+
+        return $this;
     }
 
     public function addListUser(User $listUser): static
