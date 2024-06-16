@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\User;
+use App\Form\ConfirmPasswordType;
 use App\Form\UpdatePasswordFormType;
 use App\Form\UserFormType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -153,5 +155,4 @@ class UserController extends AbstractController
         // Redirection vers une autre page après la suppression, par exemple le profil de l'utilisateur
         return $this->redirectToRoute('accueil');
     }
-
 }
