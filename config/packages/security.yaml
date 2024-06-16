@@ -40,8 +40,8 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
-        - { path: ^/createEvent, roles: ROLE_USER }
-        - { path: ^/profil_user, roles: ROLE_USER }
+        - { path: ^/event/edit, roles: ROLE_USER }
+        - { path: ^/removeEventCreated, roles: ROLE_USER }
 #        - { path: ^/profil_user, roles: ROLE_USER }
         # - { path: ^/profil, roles: ROLE_USER }
         # - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }

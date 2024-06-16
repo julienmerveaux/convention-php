@@ -38,7 +38,6 @@ class EventController extends AbstractController
     }
 
     #[Route('/createEvent', name: 'createEvent')]
-    #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $manager): Response
     {
         $event = new Event();

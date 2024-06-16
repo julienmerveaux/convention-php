@@ -5,6 +5,7 @@ namespace App\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Event;
 
 class UserVoter extends Voter
 {
@@ -14,8 +15,9 @@ class UserVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
+        // Vérifier si l'attribut est supporté et si le sujet est une instance de User ou Event
         return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
-            && $subject instanceof \App\Entity\User;
+            && ($subject instanceof UserInterface || $subject instanceof Event);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -32,22 +34,17 @@ class UserVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-                // Autoriser l'édition si l'utilisateur a le rôle ROLE_USER ou édite son propre profil
-                return $hasUserRole || $user === $subject;
-                break;
-
             case self::VIEW:
-                // Autoriser la visualisation si l'utilisateur a le rôle ROLE_USER, c'est son propre profil, ou il est admin
+                // Autoriser l'édition ou la visualisation si l'utilisateur a le rôle ROLE_USER ou c'est son propre profil
                 return $hasUserRole || $user === $subject;
-                break;
 
             case self::DELETE:
-                // Autoriser la suppression si l'utilisateur a le rôle ROLE_USER et est le créateur de l'événement
-                if ($hasUserRole && $subject instanceof \App\Entity\Event) {
-                    return $subject->getCreator() === $user;
+                // Pour la suppression, vérifier si le sujet est un événement
+                if ($subject instanceof Event) {
+                    // Autoriser la suppression si l'utilisateur a le rôle ROLE_USER et est le créateur de l'événement
+                    return $hasUserRole && $subject->getCreator() === $user;
                 }
                 return false;
-                break;
         }
 
         return false;
